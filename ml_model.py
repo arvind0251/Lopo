@@ -89,7 +89,13 @@ def predict_next(df):
         print("Model not found, training new model...")
         train_model(df, verbose=False)
     model = joblib.load(MODEL_PATH)
+
+    # DEBUG PRINTS:
+    print("Model trained on features:", list(model.feature_names_in_))
+    
     features = prepare_features(df)
+    print("Features supplied for prediction:", list(features.columns))
+
     last_feat = features.tail(1)
     probs = model.predict_proba(last_feat)[0]
     prediction = "UP" if probs[1] > 0.5 else "DOWN"
