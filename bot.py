@@ -6,7 +6,12 @@ from ml_model import predict_next
 from config import TELEGRAM_TOKEN
 
 def predict(update, context):
-    symbol = "USDJPY"  # ya user se input le sakte hain
+    # User se symbol lo, warna USD/JPY default
+    if context.args:
+        raw_symbol = context.args[0].replace("/", "").upper()
+        symbol = raw_symbol[:3] + "/" + raw_symbol[3:]
+    else:
+        symbol = "USD/JPY"
     try:
         df = fetch_candles(symbol)
         df = add_indicators(df)
@@ -25,7 +30,7 @@ def predict(update, context):
     update.message.reply_text(msg)
 
 def start(update, context):
-    update.message.reply_text("Send /predict to get advanced ML-based candle prediction.")
+    update.message.reply_text("Send /predict SYMBOL (e.g. /predict EURUSD) to get advanced ML-based candle prediction.")
 
 def main():
     updater = Updater(TELEGRAM_TOKEN, use_context=True)
