@@ -161,4 +161,4 @@ def is_spinning_top(df, tol=0.3):
         body <= candle_length * tol and
         upper_shadow > body and
         lower_shadow > body
-    )   )
+    )
