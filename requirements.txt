@@ -1,0 +1,6 @@
+python-telegram-bot
+requests
+ta
+pandas
+scikit-learn
+joblib
