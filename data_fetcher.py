@@ -3,6 +3,9 @@ import requests
 from config import API_KEY
 
 def fetch_candles(symbol="USDJPY", interval="1min", count=100):
+    # Convert symbol to Twelve Data format
+    if "/" not in symbol and len(symbol) == 6:
+        symbol = symbol[:3] + "/" + symbol[3:]
     url = f"https://api.twelvedata.com/time_series?symbol={symbol}&interval={interval}&outputsize={count}&apikey={API_KEY}"
     r = requests.get(url)
     data = r.json()
