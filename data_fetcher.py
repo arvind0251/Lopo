@@ -2,10 +2,7 @@ import pandas as pd
 import requests
 from config import API_KEY
 
-def fetch_candles(symbol="USDJPY", interval="1min", count=100):
-    # Convert symbol to Twelve Data format
-    if "/" not in symbol and len(symbol) == 6:
-        symbol = symbol[:3] + "/" + symbol[3:]
+def fetch_candles(symbol="USD/JPY", interval="1min", count=100):
     url = f"https://api.twelvedata.com/time_series?symbol={symbol}&interval={interval}&outputsize={count}&apikey={API_KEY}"
     r = requests.get(url)
     data = r.json()
@@ -13,5 +10,9 @@ def fetch_candles(symbol="USDJPY", interval="1min", count=100):
         raise ValueError(f"Twelve Data API error: {data.get('message', data)}")
     df = pd.DataFrame(data["values"])
     df = df.iloc[::-1]
-    df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
+    float_cols = ['open', 'high', 'low', 'close']
+    for col in float_cols:
+        df[col] = df[col].astype(float)
+    if 'volume' in df.columns:
+        df['volume'] = df['volume'].astype(float)
     return df
