@@ -19,9 +19,9 @@ MODEL_PATH = "forex_model.pkl"
 all_features = [
     'rsi', 'macd', 'ema_21', 'ema_50', 'bb_high', 'bb_low',
     'candle_body', 'candle_range', 'upper_shadow', 'lower_shadow', 'candle_direction',
-    'bullish_engulfing', 'bearish_engulfing', 'pin_bar', 'doji', 'hammer', 
-    'inverted_hammer', 'shooting_star', 'morning_star', 'evening_star', 
-    'three_white_soldiers', 'three_black_crows', 'marubozu_bullish', 
+    'bullish_engulfing', 'bearish_engulfing', 'pin_bar', 'doji', 'hammer',
+    'inverted_hammer', 'shooting_star', 'morning_star', 'evening_star',
+    'three_white_soldiers', 'three_black_crows', 'marubozu_bullish',
     'marubozu_bearish', 'spinning_top'
 ]
 
@@ -63,24 +63,24 @@ def prepare_features(df):
 
 if __name__ == "__main__":
     # --- Load your historical data here ---
-   # Example: df = pd.read_csv("EURUSD_M1_2023.csv")
-# Or: df = fetch_candles("EUR/USD", limit=1000)
-df = fetch_candles("EUR/USD", limit=1000)   # Or any symbol/data you have
+    # Example: df = pd.read_csv("EURUSD_M1_2023.csv")
+    # Or: df = fetch_candles("EUR/USD", limit=1000)
+    df = fetch_candles("EUR/USD", limit=1000)   # Or any symbol/data you have
 
-features = prepare_features(df)
-target = (df['close'].shift(-1) > df['close']).astype(int)[:-1]
-features = features[:-1]
+    features = prepare_features(df)
+    target = (df['close'].shift(-1) > df['close']).astype(int)[:-1]
+    features = features[:-1]
 
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, shuffle=False)
+    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, shuffle=False)
 
-model = RandomForestClassifier(n_estimators=300, max_depth=8, random_state=42, class_weight="balanced")
-model.fit(X_train, y_train)
-joblib.dump(model, MODEL_PATH)
-print("Model retrained and saved with features:", list(features.columns))
-print("Model.feature_names_in_ after training:", list(model.feature_names_in_))
+    model = RandomForestClassifier(n_estimators=300, max_depth=8, random_state=42, class_weight="balanced")
+    model.fit(X_train, y_train)
+    joblib.dump(model, MODEL_PATH)
+    print("Model retrained and saved with features:", list(features.columns))
+    print("Model.feature_names_in_ after training:", list(model.feature_names_in_))
 
-# Optional: Show test metrics
-preds = model.predict(X_test)
-from sklearn.metrics import classification_report, accuracy_score
-print("Test Accuracy:", accuracy_score(y_test, preds))
-print(classification_report(y_test, preds))
+    # Optional: Show test metrics
+    preds = model.predict(X_test)
+    from sklearn.metrics import classification_report, accuracy_score
+    print("Test Accuracy:", accuracy_score(y_test, preds))
+    print(classification_report(y_test, preds))
