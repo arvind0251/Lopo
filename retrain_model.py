@@ -73,10 +73,11 @@ if __name__ == "__main__":
 
     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, shuffle=False)
 
-    model = RandomForestClassifier(n_estimators=300, max_depth=8, random_state=42, class_weight="balanced")
+        model = RandomForestClassifier(n_estimators=300, max_depth=8, random_state=42, class_weight="balanced")
     model.fit(X_train, y_train)
     joblib.dump(model, MODEL_PATH)
     print("Model retrained and saved with features:", list(features.columns))
+    print("Model.feature_names_in_ after training:", list(model.feature_names_in_))
 
     # Optional: Show test metrics
     preds = model.predict(X_test)
