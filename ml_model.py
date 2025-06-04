@@ -17,10 +17,23 @@ from price_action import (
     is_spinning_top,
 )
 
+# --- IMPORTANT: This list should match retrain_model.py ---
+all_features = [
+    'rsi', 'macd', 'ema_21', 'ema_50', 'bb_high', 'bb_low',
+    'candle_body', 'candle_range', 'upper_shadow', 'lower_shadow', 'candle_direction',
+    'bullish_engulfing', 'bearish_engulfing', 'pin_bar', 'doji', 'hammer', 
+    'inverted_hammer', 'shooting_star', 'morning_star', 'evening_star', 
+    'three_white_soldiers', 'three_black_crows', 'marubozu_bullish', 
+    'marubozu_bearish', 'spinning_top'
+]
+
 def prepare_features(df):
     """Prepare an extensive feature set for ML."""
-    features = df[['rsi', 'macd', 'ema_21', 'ema_50', 'bb_high', 'bb_low']].copy()
-    
+    features = pd.DataFrame()
+    # Add technical indicators
+    for col in ['rsi', 'macd', 'ema_21', 'ema_50', 'bb_high', 'bb_low']:
+        features[col] = df[col]
+
     # Add candle statistics
     features['candle_body'] = abs(df['close'] - df['open'])
     features['candle_range'] = df['high'] - df['low']
@@ -44,8 +57,9 @@ def prepare_features(df):
     features['marubozu_bearish'] = [int(is_marubozu_bearish(df.iloc[:i+1])) for i in range(len(df))]
     features['spinning_top'] = [int(is_spinning_top(df.iloc[:i+1])) for i in range(len(df))]
     
-    # Clean NaNs
+    # Clean NaNs and enforce all_features order
     features = features.fillna(0)
+    features = features[all_features]
     return features
 
 def train_model(df, verbose=True):
