@@ -61,11 +61,4 @@ def main():
     updater.idle()
 
 if __name__ == '__main__':
-    main()   dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("predict", predict))
-    updater.start_polling()
-    updater.idle()
-
-if __name__ == '__main__':
     main()
