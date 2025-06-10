@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import requests
+import pytz
 from config import API_KEY  # Make sure your Twelve Data API key is set here
 
 def fetch_candles(symbol="USDJPY", interval="1min", count=1000):
@@ -29,9 +30,9 @@ def fetch_candles(symbol="USDJPY", interval="1min", count=1000):
     for col in float_cols:
         df[col] = df[col].astype(float)
 
-    # Convert datetime if present and add time-based features
+    # Convert UTC datetime to Asia/Kolkata timezone and extract time features
     if 'datetime' in df.columns:
-        df['datetime'] = pd.to_datetime(df['datetime'])
+        df['datetime'] = pd.to_datetime(df['datetime'], utc=True).dt.tz_convert('Asia/Kolkata')
         df['hour'] = df['datetime'].dt.hour
         df['minute'] = df['datetime'].dt.minute
         df['day_of_week'] = df['datetime'].dt.dayofweek
